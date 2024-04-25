@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-/**
- * @title URULE: Decentralized Governance Smart Contract
- * @dev Smart contract for decentralized governance and voting platform.
- */
-contract URULE {
+contract SmartDemocracy {
     address public owner; // Address of the contract owner
     mapping(address => bool) public voters; // Mapping of authorized voters
     mapping(address => bool) public candidateRegistered; // Mapping of registered candidates
@@ -17,6 +13,7 @@ contract URULE {
     event VoterAdded(address indexed voter); // Event emitted when a voter is added
     event CandidateRegistered(address indexed candidate); // Event emitted when a candidate is registered
     event VoteCasted(address indexed voter, address indexed candidate); // Event emitted when a vote is casted
+    event MediaUpdated(address indexed candidate, string media); // Event emitted when a candidate updates their media
 
     /**
      * @dev Constructor function to set the contract owner.
@@ -53,6 +50,16 @@ contract URULE {
         candidateLegislation[msg.sender] = _legislation;
         candidateMedia[msg.sender] = _media;
         emit CandidateRegistered(msg.sender);
+    }
+
+    /**
+     * @dev Updates candidate's media information.
+     * @param _media The candidate's updated media platform or campaign message.
+     */
+    function updateMedia(string memory _media) external {
+        require(candidateRegistered[msg.sender], "Candidate not registered");
+        candidateMedia[msg.sender] = _media;
+        emit MediaUpdated(msg.sender, _media);
     }
 
     /**
